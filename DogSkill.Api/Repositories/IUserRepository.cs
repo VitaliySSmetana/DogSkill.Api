@@ -8,7 +8,8 @@ namespace DogSkill.Api.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> GetForAuthenticationAsync(string userName, string password);
+        Task<User> GetForAuthenticationAsync(string email);
         Task<User> GetByIdAsync(int id);
+        Task CreateUserAsync(User entity);
     }
 }

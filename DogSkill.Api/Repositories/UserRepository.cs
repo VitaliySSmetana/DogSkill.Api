@@ -17,10 +17,16 @@ namespace DogSkill.Api.Repositories
             _context = context;
         }
 
-        public async Task<User> GetForAuthenticationAsync(string userName, string password)
-            => await _context.Users.FirstOrDefaultAsync(x => x.FirstName == userName && x.Password == password);
+        public async Task<User> GetForAuthenticationAsync(string email)
+            => await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
 
         public async Task<User> GetByIdAsync(int id)
             => await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        public async Task CreateUserAsync(User entity)
+        {
+            await _context.Users.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

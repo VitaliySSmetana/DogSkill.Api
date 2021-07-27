@@ -8,15 +8,15 @@ namespace DogSkill.Api.Communications
 {
     public class AuthenticateResponse
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string Token { get; set; }
 
 
         public AuthenticateResponse(User user, string token)
         {
-            Id = user.Id;
-            FirstName = user.FirstName;
+            Id = user.UserId;
+            FirstName = user.UserName;
             Token = token;
         }
     }

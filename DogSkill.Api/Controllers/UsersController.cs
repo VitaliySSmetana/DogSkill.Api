@@ -20,21 +20,23 @@ namespace DogSkill.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserCreateRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            await _userService.CreateUserAsync(request);
             
-            return View();
+            return Ok();
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(AuthenticateRequest request)
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateRequest request)
         {
-            var response = _userService.Authenticate(request);
+            var response = await _userService.Authenticate(request);
 
             if (response == null)
             {

@@ -7,10 +7,9 @@ using DogSkill.Api.Data.Entities;
 
 namespace DogSkill.Api.Services.Interfaces
 {
-    public interface IUserService
+    public interface IUserActivityService
     {
-        Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
-        User GetById(int id);
-        Task CreateUserAsync(UserCreateRequest request);
+        Task<List<UserActivityGetResponse>> GetTopTenAsync();
+        Task UpsertActivityAsync(UserActivityUpsertRequest request);
     }
 }

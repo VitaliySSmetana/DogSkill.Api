@@ -10,6 +10,7 @@ using DogSkill.Api.Data.Entities;
 using DogSkill.Api.Helpers;
 using DogSkill.Api.Repositories;
 using DogSkill.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -26,16 +27,35 @@ namespace DogSkill.Api.Services
             _appSettings = appSettings.Value;
         }
 
-        public AuthenticateResponse Authenticate(AuthenticateRequest model)
-        {
-            var user = _userRepository.GetForAuthenticationAsync(model.UserName, model.Password).Result;
+        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
+        { 
+            var user = await _userRepository.GetForAuthenticationAsync(model.Email);
 
-            if (user == null)
+            if (user == null || user.Password != GetHashedPassword(model.Password, user.Salt))
                 return null;
 
             var token = GenerateToken(user);
 
             return new AuthenticateResponse(user, token);
+        }
+
+        public User GetById(int id)
+            => _userRepository.GetByIdAsync(id).Result;
+
+        public async Task CreateUserAsync(UserCreateRequest request)
+        {
+            var salt = Guid.NewGuid().ToString();
+
+            var user = new User
+            {
+                UserName = request.UserName,
+                Phone = request.Phone,
+                Email = request.Email,
+                Salt = salt,
+                Password = GetHashedPassword(request.Password, salt)
+            };
+
+            await _userRepository.CreateUserAsync(user);
         }
 
         private string GenerateToken(User user)
@@ -53,7 +73,11 @@ namespace DogSkill.Api.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public User GetById(int id)
-            => _userRepository.GetByIdAsync(id).Result;
+        private string GetHashedPassword(string password, string salt)
+        {
+            var saltByte = Encoding.ASCII.GetBytes(salt);
+            
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(password, saltByte, KeyDerivationPrf.HMACSHA1, 10000, 256 / 8));
+        }
     }
 }

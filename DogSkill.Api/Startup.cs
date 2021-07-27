@@ -35,17 +35,21 @@ namespace DogSkill.Api
             services.AddControllers();
 
             services.AddDbContext<DSContext>(
-                opt => opt.UseNpgsql(Configuration.GetConnectionString("")));
+                opt => opt.UseNpgsql(Configuration.GetConnectionString("npgsql")));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserActivityRepository, UserActivityRepository>();
+            services.AddScoped<IUserActivityService, UserActivityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DSContext context)
         {
+            InitDb(context);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -66,6 +70,11 @@ namespace DogSkill.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void InitDb(DSContext context)
+        {
+            context.Database.Migrate();
         }
     }
 }

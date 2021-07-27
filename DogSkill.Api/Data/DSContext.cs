@@ -14,11 +14,14 @@ namespace DogSkill.Api.Data
         } 
 
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserActivity> UserActivities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseIdentityColumns();
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new UserActivityEntityConfiguration());
         }
     }
 }
