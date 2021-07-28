@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DogSkill.Api.Communications;
+using DogSkill.Api.Helpers;
 using DogSkill.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace DogSkill.Api.Controllers
             }
 
             await _userService.CreateUserAsync(request);
-            
+
             return Ok();
         }
 
@@ -40,10 +41,19 @@ namespace DogSkill.Api.Controllers
 
             if (response == null)
             {
-                return BadRequest(new {message = "Username or password is incorrect"});
+                return BadRequest(new { message = "Username or password is incorrect" });
             }
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet("whoami")]
+        public IActionResult WhoAmI()
+        {
+            var user = HttpContext.GetUserData();
+
+            return Ok(new { user.UserId, user.UserName, user.Email, user.Phone });
         }
     }
 }
