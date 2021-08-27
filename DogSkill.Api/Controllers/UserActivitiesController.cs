@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DogSkill.Api.Controllers
 {
-    [Route("activities")]
+    [Route("api/activities")]
     public class UserActivitiesController : ControllerBase
     {
         private readonly IUserActivityService _activityService;

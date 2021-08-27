@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DogSkill.Api.Controllers
 {
-    [Route("users")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
