@@ -60,7 +60,7 @@ namespace DogSkill.Api
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseHttpsRedirection();
+        //    app.UseHttpsRedirection();
 
             app.UseRouting();
 
