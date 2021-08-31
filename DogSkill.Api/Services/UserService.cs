@@ -52,7 +52,8 @@ namespace DogSkill.Api.Services
                 Phone = request.Phone,
                 Email = request.Email,
                 Salt = salt,
-                Password = GetHashedPassword(request.Password, salt)
+                Password = GetHashedPassword(request.Password, salt),
+                IsAgree = request.IsAgree,
             };
 
             await _userRepository.CreateUserAsync(user);

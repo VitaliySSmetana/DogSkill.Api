@@ -22,6 +22,8 @@ namespace DogSkill.Api.Data.Entities
         public string Salt { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        [Required]
+        public bool IsAgree { get; set; }
     }
 
     public class UserEntityConfiguration : IEntityTypeConfiguration<User>
